@@ -22,6 +22,28 @@ const router = createRouter({
           component: () => import('../views/Login.vue')
         }
       ]
+    },
+    {
+      path: '/data',
+      name:'datalist',
+      component:() => import('../views/datacolletion/ListData.vue'),
+      children : [
+        {
+          path:'create',
+          name:'createdata',
+          component: () => import('../views/datacolletion/CreateData.vue')
+        },
+        {
+          path:'detail/:id',
+          name:'datadetail',
+          component: () => import('../views/datacolletion/ViewData.vue')
+        },
+        {
+          path:'detail/:id/update',
+          name:'datadetail',
+          component: () => import('../views/datacolletion/ViewData.vue')
+        },
+      ]
     }
   ]
 })
