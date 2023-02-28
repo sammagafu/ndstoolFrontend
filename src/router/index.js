@@ -26,15 +26,15 @@ const router = createRouter({
     {
       path: '/data',
       name:'datalist',
-      component:() => import('../views/datacolletion/ListData.vue'),
+      // component:() => import('../views/datacolletion/ListData.vue'),
       children : [
         {
-          path:'create',
+          path:'create/',
           name:'createdata',
-          component: () => import('../views/datacolletion/CreateData.vue')
+          component: () => import('@/views/datacolletion/CreateData.vue')
         },
         {
-          path:'detail/:id',
+          path:':id/',
           name:'datadetail',
           component: () => import('../views/datacolletion/ViewData.vue')
         },
