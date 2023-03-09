@@ -31,12 +31,31 @@ const router = createRouter({
     {
       path: '/data',
       name:'datalist',
-      // component:() => import('../views/datacolletion/ListData.vue'),
       children : [
         {
-          path:'create/',
+          path:'create',
           name:'createdata',
-          component: () => import('@/views/datacolletion/CreateData.vue')
+          component: () => import('@/components/index.vue'),
+          children : [
+            {
+              path: 'base',
+              name: 'base',
+              component: () => import("../components/parentComp.vue"),
+              children:[
+                {
+                  path: 'patient',
+                  name: 'patient',
+                  component: () => import("../components/_patientInfo.vue")
+                },
+                {
+                  path: 'question',
+                  name: 'question',
+                  component: () => import("../components/_questions.vue")
+                }
+              ]
+            },
+            
+          ]
         },
         {
           path:':id/',

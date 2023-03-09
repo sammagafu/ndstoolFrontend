@@ -1,6 +1,5 @@
-<!-- <template>
+ <template>
   <div>
-    <TopNavigationBar/>
     <div v-for="(question, index) in displayedQuestions" :key="index" class="m-4">
       <h3 class="text-xl font-semibold tracking-wide break-all">{{ (currentPage - 1) * itemsPerPage + index + 1 }}. {{ question.question }}</h3>
       <div class="bg-slate-200 hover:bg-cyan-600 m-2">
@@ -37,15 +36,25 @@ import { onMounted, ref, computed } from 'vue';
 const itemsPerPage = 5;
 
 onMounted(() => {
-  axios.get('https://opentdb.com/api.php?amount=20&type=boolean')
+  axios.get('questions')
     .then(response => {
-      const { data } = response;
-      data.results.forEach(el => {
+      response.data.forEach(el => {
         el.userAnswer = '';
       });
-      questions.value = data.results;
+      questions.value =  response.data
     })
 });
+
+// onMounted(() => {
+//   axios.get('https://opentdb.com/api.php?amount=20&type=boolean')
+//     .then(response => {
+//       const { data } = response;
+//       data.results.forEach(el => {
+//         el.userAnswer = '';
+//       });
+//       questions.value = data.results;
+//     })
+// });
 
 const questions = ref([]);
 
@@ -59,67 +68,4 @@ const displayedQuestions = computed(() => {
   return questions.value.slice(startIndex, endIndex);
 });
 
-</script> -->
-
-<template>
-  <div>
-      <Toast />
-
-      <div class="card">
-          <Steps :model="items" aria-label="Form Steps" />
-      </div>
-
-      <!-- <router-view v-slot="{Component}" :formData="formObject" @prevPage="prevPage($event)" @nextPage="nextPage($event)" @complete="complete">
-          <keep-alive>
-              <component :is="Component" />
-          </keep-alive>
-      </router-view> -->
-  </div>
-</template>
-
-<script setup>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { useToast } from "primevue/usetoast";
-import Toast from 'primevue/toast';
-
-
-const router = useRouter();
-const toast = useToast();
-const items = ref([
-  {
-      label: 'Personal',
-      to: "/"
-  },
-  {
-      label: 'Seat',
-      to: "/seat",
-  },
-
-]);
-const formObject = ref({});
-
-const nextPage = (event) => {
-  for (let field in event.formData) {
-      formObject.value[field] = event.formData[field];
-  }
-
-  router.push(items.value[event.pageIndex + 1].to);
-};
-const prevPage = (event) => {
-  router.push(items.value[event.pageIndex - 1].to);
-};
-const complete = () => {
-  toast.add({severity:'success', summary:'Order submitted', detail: 'Dear, ' + formObject.value.firstname + ' ' + formObject.value.lastname + ' your order completed.'});
-};
 </script>
-
-<style scoped>
-::v-deep(b) {
-  display: block;
-}
-
-::v-deep(.p-card-body) {
-  padding: 2rem;
-}
-</style>
