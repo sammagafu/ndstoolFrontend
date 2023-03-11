@@ -1,5 +1,5 @@
  <template>
-  <div>
+  <div class="container mx-auto">
     <div v-for="(question, index) in displayedQuestions" :key="index" class="m-4">
       <h3 class="text-xl font-semibold tracking-wide break-all">{{ (currentPage - 1) * itemsPerPage + index + 1 }}. {{ question.question }}</h3>
       <div class="bg-slate-200 hover:bg-cyan-600 m-2">
@@ -36,7 +36,7 @@ import { onMounted, ref, computed } from 'vue';
 const itemsPerPage = 5;
 
 onMounted(() => {
-  axios.get('questions')
+  axios.get('question')
     .then(response => {
       response.data.forEach(el => {
         el.userAnswer = '';
