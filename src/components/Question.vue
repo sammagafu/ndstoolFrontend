@@ -69,15 +69,16 @@ const displayedQuestions = computed(() => {
           <Steps :model="items" aria-label="Form Steps" />
       </div>
 
-      <!-- <router-view v-slot="{Component}" :formData="formObject" @prevPage="prevPage($event)" @nextPage="nextPage($event)" @complete="complete">
+      <router-view v-slot="{Component}" :formData="formObject" @prevPage="prevPage($event)" @nextPage="nextPage($event)" @complete="complete">
           <keep-alive>
               <component :is="Component" />
           </keep-alive>
-      </router-view> -->
+      </router-view>
   </div>
 </template>
 
 <script setup>
+
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
@@ -99,19 +100,25 @@ const items = ref([
 ]);
 const formObject = ref({});
 
-const nextPage = (event) => {
-  for (let field in event.formData) {
-      formObject.value[field] = event.formData[field];
-  }
+const prevPage = ({ pageIndex }) => {
+      router.push(items[pageIndex - 1].to);
+    };
 
-  router.push(items.value[event.pageIndex + 1].to);
-};
-const prevPage = (event) => {
-  router.push(items.value[event.pageIndex - 1].to);
-};
-const complete = () => {
-  toast.add({severity:'success', summary:'Order submitted', detail: 'Dear, ' + formObject.value.firstname + ' ' + formObject.value.lastname + ' your order completed.'});
-};
+    const nextPage = ({ pageIndex, formData }) => {
+      for (const field in formData) {
+        formObject[field] = formData[field];
+      }
+      router.push(items[pageIndex + 1].to);
+    };
+
+    const complete = () => {
+      toast.add({
+        severity: 'success',
+        summary: 'Order submitted',
+        detail: `Dear, ${formObject.firstname} ${formObject.lastname} your order completed.`
+      });
+    };
+
 </script>
 
 <style scoped>

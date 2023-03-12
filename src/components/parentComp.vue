@@ -1,64 +1,72 @@
 <template>
-        <TopNavigationBar></TopNavigationBar>
-    <div>
-        <Toast />
-  
-        <div class="card">
-            <Steps :model="items" aria-label="Form Steps" />
-        </div>
-  
-        <router-view v-slot="{Component}" :formData="formObject" @prevPage="prevPage($event)" @nextPage="nextPage($event)" @complete="complete">
-            <keep-alive>
-                <component :is="Component" />
-            </keep-alive>
-        </router-view>
+  <TopNavigationBar></TopNavigationBar>
+  <div>
+    <Toast />
+
+    <div class="card">
+      <Steps :model="items" aria-label="Form Steps" />
     </div>
-  </template>
-  
-  <script setup>
-  import TopNavigationBar from "./TopNavigationBar.vue";
-  import { ref } from "vue";
-  import { useRouter } from "vue-router";
-  import { useToast } from "primevue/usetoast";
-  import Toast from 'primevue/toast';
-  
-  
-  const router = useRouter();
-  const toast = useToast();
-  const items = ref([
-    {
-        label: 'Patient Information',
-        to: "/data/base/create/patient"
-    },
-    {
-        label: 'Questions',
-        to: "/data/base/create/question",
-    },
-  
-  ]);
-  const formObject = ref({});
-  
-  const nextPage = (event) => {
-    for (let field in event.formData) {
-        formObject.value[field] = event.formData[field];
-    }
-  
-    router.push(items.value[event.pageIndex + 1].to);
-  };
-  const prevPage = (event) => {
-    router.push(items.value[event.pageIndex - 1].to);
-  };
-  const complete = () => {
-    toast.add({severity:'success', summary:'Order submitted', detail: 'Dear, ' + formObject.value.firstname + ' ' + formObject.value.lastname + ' your order completed.'});
-  };
-  </script>
-  
-  <style scoped>
-  ::v-deep(b) {
-    display: block;
+
+    <router-view
+      v-slot="{ Component }"
+      :formData="formObject"
+      @prevPage="prevPage($event)"
+      @nextPage="nextPage($event)"
+      @complete="complete"
+    >
+      <keep-alive>
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
+  </div>
+</template>
+
+<script setup>
+import TopNavigationBar from "./TopNavigationBar.vue";
+import { reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useToast } from "primevue/usetoast";
+import Toast from "primevue/toast";
+
+const router = useRouter();
+const toast = useToast();
+const items = [
+  {
+    label: "Patient Information",
+    to: "/data/create/base/patient",
+  },
+  {
+    label: "Questions",
+    to: "/data/create/base/question",
+  },
+];
+const formObject = reactive({});
+
+const nextPage = (event) => {
+  for (let field in event.formData) {
+    formObject[field] = event.formData[field];
   }
-  
-  ::v-deep(.p-card-body) {
-    padding: 2rem;
-  }
-  </style>
+
+  router.push(items[event.pageIndex + 1].to);
+};
+const prevPage = (event) => {
+  router.push(items[event.pageIndex - 1].to);
+};
+const complete = () => {
+  toast.add({
+    severity: "success",
+    summary: "Order submitted",
+    detail: "Dear, " + formObject.fullname + " your order completed.",
+  });
+};
+</script>
+
+<style scoped>
+::v-deep(b) {
+  display: block;
+}
+
+::v-deep(.p-card-body) {
+  padding: 2rem;
+}
+</style>
