@@ -120,6 +120,6 @@ function prevPage() {
   emit("prev-page", { pageIndex: 1 });
 }
 function complete() {
-  emit("complete");
+  emit("complete",{formData:{questions:questions.value}});
 }
 </script>

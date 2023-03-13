@@ -22,6 +22,7 @@
 </template>
 
 <script setup>
+
 import TopNavigationBar from "./TopNavigationBar.vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
@@ -52,7 +53,16 @@ const nextPage = (event) => {
 const prevPage = (event) => {
   router.push(items[event.pageIndex - 1].to);
 };
-const complete = () => {
+const complete = (dataQuestions) => {
+let submittingObject={
+  ...formObject,
+  questions:dataQuestions.formData.questions.map(el=>({
+    question:el.question,
+    answers:el.userAnswer
+  }))
+}
+console.log("Submitting payload",submittingObject);
+
   toast.add({
     severity: "success",
     summary: "Order submitted",
