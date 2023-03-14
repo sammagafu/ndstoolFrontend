@@ -15,54 +15,26 @@
             <label :for="'true' + index">
               <input
                 type="radio"
-                :name="question.question"
+                :name="question.id"
                 :id="'true' + index"
                 value="true"
                 v-model="question.userAnswer"
               />
-              True
+              Yes
             </label>
           </div>
           <div class="bg-slate-200 hover:bg-cyan-600 m-2">
             <label :for="'false' + index">
               <input
                 type="radio"
-                :name="question.question"
+                :name="question.id"
                 :id="'false' + index"
                 value="false"
                 v-model="question.userAnswer"
               />
-              False
+              No
             </label>
           </div>
-          <div class="bg-slate-200 hover:bg-cyan-600 m-2">
-            <label :for="'dont-know' + index">
-              <input
-                type="radio"
-                :name="question.question"
-                :id="'dont-know' + index"
-                value="dont-know"
-                v-model="question.userAnswer"
-              />
-              Don't know
-            </label>
-          </div>
-        </div>
-        <div class="flex justify-center my-8">
-          <button
-            class="mx-2"
-            @click="currentPage--"
-            :disabled="currentPage === 1"
-          >
-            Previous
-          </button>
-          <button
-            class="mx-2"
-            @click="currentPage++"
-            :disabled="currentPage === pageCount"
-          >
-            Next
-          </button>
         </div>
       
     </template>
@@ -90,13 +62,13 @@ const itemsPerPage = 5;
 
 onMounted(() => {
   axios
-    .get("https://opentdb.com/api.php?amount=20&type=boolean")
+    .get("question")
     .then((response) => {
-      const { data } = response;
-      data.results.forEach((el) => {
+      // const { data } = response;
+      response.data.forEach((el) => {
         el.userAnswer = "";
       });
-      questions.value = data.results;
+      questions.value = response.data;
     });
 });
 
@@ -120,6 +92,7 @@ function prevPage() {
   emit("prev-page", { pageIndex: 1 });
 }
 function complete() {
-  emit("complete",{formData:{questions:questions.value}});
+  // console.log('question.id :>> ', questions.id);
+  emit("complete",{formData:{patientQuestion:questions.value}});
 }
 </script>

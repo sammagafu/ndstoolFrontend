@@ -73,7 +73,11 @@ const loginUser  =  function(){
         console.log('error :>> ', error);
     })
 
-    axios.get('auth/users/me')
+    axios.get('auth/users/me',{
+        headers:{
+            'Authorization':"Token " + userstore.authToken   
+        }
+    })
     .then(response => {
         console.log(response);
         router.push({name:'home'})

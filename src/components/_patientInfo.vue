@@ -216,8 +216,9 @@ function nextPage() {
   if (validateForm()) {
     emit("next-page", {
       formData: {
-        fullname: fullname.value,
+        full_name: fullname.value,
         facility: facility.value,
+        region:region.value, 
         dateofbirth: dateofbirth.value,
         height: height.value,
         weight: weight.value,
@@ -233,6 +234,9 @@ function validateForm() {
 
   if (!facility.value.trim()) validationErrors.value["facility"] = true;
   else delete validationErrors.value["facility"];
+
+  if (!facility.value.trim()) validationErrors.value["region"] = true;
+  else delete validationErrors.value["region"];
 
   if (!dateofbirth.value.trim()) validationErrors.value["dateofbirth"] = true;
   else delete validationErrors.value["dateofbirth"];

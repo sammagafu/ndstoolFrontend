@@ -58,6 +58,11 @@ const router = createRouter({
           ]
         },
         {
+          path:'',
+          name:'attandedPatients',
+          component:()=>import('../views/datacolletion/ListData.vue')
+        },
+        {
           path:':id/',
           name:'datadetail',
           component: () => import('../views/datacolletion/ViewData.vue')

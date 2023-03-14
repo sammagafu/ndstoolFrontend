@@ -28,6 +28,7 @@ import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "primevue/usetoast";
 import Toast from "primevue/toast";
+import axios from "axios";
 
 const router = useRouter();
 const toast = useToast();
@@ -54,14 +55,20 @@ const prevPage = (event) => {
   router.push(items[event.pageIndex - 1].to);
 };
 const complete = (dataQuestions) => {
+  console.log('dataQuestions :>> ', dataQuestions);
 let submittingObject={
   ...formObject,
-  questions:dataQuestions.formData.questions.map(el=>({
-    question:el.question,
+  patientQuestion:dataQuestions.formData.patientQuestion.map(el=>({
+    question:el.id,
     answers:el.userAnswer
   }))
 }
-console.log("Submitting payload",submittingObject);
+
+console.log('submittingObject :>> ', submittingObject);
+
+axios.post('patient/',submittingObject,).then(response =>{ }).catch(error =>{
+})
+
 
   toast.add({
     severity: "success",
