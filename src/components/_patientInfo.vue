@@ -57,6 +57,19 @@
                   >
                 </div>
                 <div>
+                  <label for="sex" class="block mb-2 text-base font-medium text-gray-900 dark:text-white">Sex</label>
+                  <select class="block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="sex">
+                    <option disabled value>Choose Patient Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                  <small
+                    v-show="validationErrors.sex && submitted"
+                    class="p-error"
+                    >sex is required.</small
+                  >
+                </div>
+                <div>
                   <label
                     for="region"
                     class="block mb-2 text-base font-medium text-gray-900 dark:text-white"
@@ -117,6 +130,7 @@
                     }"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     v-model="dateofbirth"
+                    @input="pickedDate"
                   />
                   <small
                     v-show="validationErrors.dateofbirth && submitted"
@@ -174,6 +188,43 @@
                     >weight is required.</small
                   >
                 </div>
+
+                <div>
+                  <label
+                    for="phone"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Parent phone number</label
+                  >
+                  <input
+                    type="text"
+                    name="text"
+                    id="phone"
+                    :class="{
+                      'p-invalid': validationErrors.phone && submitted,
+                    }"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    placeholder="0712xxxxx"
+                
+                    v-model="phone"
+                  />
+                  <small
+                    v-show="validationErrors.phone && submitted"
+                    class="p-error"
+                    >phone is required.</small
+                  >
+                </div>
+
+                <div>
+
+<label for="address" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your address</label>
+<textarea id="address" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Address goes here..." v-model="address"></textarea>
+<small
+                    v-show="validationErrors.address && submitted"
+                    class="p-error"
+                    >address is required.</small
+                  >
+                </div>
+
               </form>
             </div>
           </div>
@@ -207,9 +258,22 @@ const region = ref("");
 const dateofbirth = ref("");
 const height = ref('');
 const weight = ref('');
+const phone = ref('');
+const address = ref('');
+const sex = ref('');
+const ageGroup = ref('');
 
 const submitted = ref(false);
 const validationErrors = ref({});
+
+const pickedDate = () => {
+      const currentDate = new Date();
+      const inputDate = new Date(dateofbirth.value);
+      const timeDiff = currentDate.getTime() - inputDate.getTime();
+      const monthsDiff = timeDiff / (1000 * 60 * 60 * 24 * 30);
+      ageGroup.value = Math.floor(monthsDiff)
+      console.log('ageGroup.value :>> ', ageGroup.value);
+    };
 
 function nextPage() {
   submitted.value = true;
@@ -222,8 +286,12 @@ function nextPage() {
         dateofbirth: dateofbirth.value,
         height: height.value,
         weight: weight.value,
+        phone: phone.value,
+        address: address.value,
+        sex: sex.value,
       },
       pageIndex: 0,
+      ageroup:ageGroup,
     });
   }
 }
@@ -246,6 +314,15 @@ function validateForm() {
 
   if (!weight.value) validationErrors.value["weight"] = true;
   else delete validationErrors.value["weight"];
+
+  if (!phone.value) validationErrors.value["phone"] = true;
+  else delete validationErrors.value["phone"];
+
+  if (!address.value) validationErrors.value["address"] = true;
+  else delete validationErrors.value["address"];
+
+  if (!sex.value) validationErrors.value["sex"] = true;
+  else delete validationErrors.value["sex"];
 
   return !Object.keys(validationErrors.value).length;
 }

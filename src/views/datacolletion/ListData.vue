@@ -9,6 +9,7 @@
     <Column field="region" header="Region" sortable style="width: 25%"></Column>
     <Column field="weight" header="Weight" sortable style="width: 25%"></Column>
     <Column field="height" header="Height" sortable style="width: 25%"></Column>
+    <Column field="phonenumber" header="Phone Number" sortable style="width: 25%"></Column>
 </DataTable>
 
     </div>
@@ -38,7 +39,8 @@ onMounted(() => {
                 patient:row.full_name,
                 region:row.region,
                 weight:row.weight,
-                height:row.height
+                height:row.height,
+                phonenumber:row.phonenumber
             }
         })
     console.log('response :>> ', response);
