@@ -2,7 +2,12 @@
   <div
     class="px-4 py-8 md:px-6 lg:px-8 flex justify-content-center align-items-center"
   >
-    <div v-if="isCompleted" class="surface-card border-round shadow-2 p-4">
+  <div v-if="isLoading" class="surface-card border-round shadow-2 p-4">
+      <p class="mt-0 mb-4 p-0 line-height-3">
+       Loading...
+      </p>
+    </div>
+    <div v-else-if="isCompleted" class="surface-card border-round shadow-2 p-4">
       <div class="text-900 font-medium mb-2 text-xl">Submit</div>
       <p class="mt-0 mb-4 p-0 line-height-3">
         All Questions have been answered
@@ -44,13 +49,16 @@ const allQuestions = ref([]);
 
 onMounted(async () => {
   try {
+    isLoading.value=true
     const response = await axios.get("category");
     allQuestions.value = response.data.map((el) => ({ ...el, userAnswer: "" }));
     generateQuestions(averageAge, "");
+    isLoading.value=false
   } catch (error) {
     console.error(error);
   }
 });
+const isLoading=ref(false)
 
 let templateCategoryName = ref("");
 let templateQuestion = ref("");
