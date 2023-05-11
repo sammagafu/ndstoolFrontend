@@ -1,98 +1,365 @@
 <template>
-  <Card>
-    <template v-slot:content>
-      
-        <div
-          v-for="(question, index) in displayedQuestions"
-          :key="index"
-          class="m-4"
-        >
-          <h3 class="text-xl font-semibold tracking-wide break-all">
-            {{ (currentPage - 1) * itemsPerPage + index + 1 }}.
-            {{ question.question }}
-          </h3>
-          <div class="bg-slate-200 hover:bg-cyan-600 m-2">
-            <label :for="'true' + index">
-              <input
-                type="radio"
-                :name="question.id"
-                :id="'true' + index"
-                value="true"
-                v-model="question.userAnswer"
-              />
-              Yes
-            </label>
-          </div>
-          <div class="bg-slate-200 hover:bg-cyan-600 m-2">
-            <label :for="'false' + index">
-              <input
-                type="radio"
-                :name="question.id"
-                :id="'false' + index"
-                value="false"
-                v-model="question.userAnswer"
-              />
-              No
-            </label>
-          </div>
-        </div>
-      
-    </template>
-    <template v-slot:footer>
-      <div class="flex justify-center gap-8">
-        <Button label="Back" @click="prevPage()" icon="pi pi-angle-left" class="p-button-info" />
+  <div
+    class="px-4 py-8 md:px-6 lg:px-8 flex justify-content-center align-items-center"
+  >
+    <div v-if="isCompleted" class="surface-card border-round shadow-2 p-4">
+      <div class="text-900 font-medium mb-2 text-xl">Submit</div>
+      <p class="mt-0 mb-4 p-0 line-height-3">
+        All Questions have been answered
+      </p>
+      <div class="flex justify-content-center gap-5">
         <Button
-          label="Complete"
-          @click="complete()"
-          icon="pi pi-check"
-          iconPos="right"
-          class="p-button-success"
+          label="Submit Answers"
+          @click="complete"
+          class="text-blue-400 hover:text-white"
         />
       </div>
-    </template>
-  </Card>
+    </div>
+    <div v-else class="surface-card border-round shadow-2 p-4">
+      <div class="text-900 font-medium mb-2 text-xl">
+        {{ templateCategoryName }}
+      </div>
+      <p class="mt-0 mb-4 p-0 line-height-3">{{ "Qn: " + templateQuestion }}</p>
+      <div class="flex justify-content-center gap-5">
+        <Button
+          label="No"
+          @click="generateQuestions(averageAge, 'No')"
+          class="text-blue-400 hover:text-white"
+        />
+        <Button
+          label="Yes"
+          @click="generateQuestions(averageAge, 'Yes')"
+          class="text-blue-400 hover:text-white"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-// import TopNavigationBar from '/src/components/TopNavigationBar.vue';
 import axios from "axios";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref } from "vue";
 
-const itemsPerPage = 5;
+const allQuestions = ref([]);
 
-onMounted(() => {
-  axios
-    .get("question")
-    .then((response) => {
-      // const { data } = response;
-      response.data.forEach((el) => {
-        el.userAnswer = "";
+onMounted(async () => {
+  try {
+    const response = await axios.get("category");
+    allQuestions.value = response.data.map((el) => ({ ...el, userAnswer: "" }));
+    generateQuestions(averageAge, "");
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+let templateCategoryName = ref("");
+let templateQuestion = ref("");
+const averageAge = 96;
+
+let questionIndex = 0;
+let categoryId = 1;
+let answeredQuestions = [];
+let categoriesQuestionNew = []; //all questions for specific category
+let finalAnsweredArrayWithAnswers = [];
+let questionsByCategoryWholeObject = [];
+let isCompleted=ref(false)
+
+/* Check consecutive Three No's */
+function findFirstConsecutiveThreeNo(data) {
+  if (data.length < 3) {
+    return;
+  }
+  let consecutiveNoCount = 0;
+  for (let i = data.length - 1; i >= data.length - 3; i--) {
+    if (data[i].userAnswer === "No") {
+      consecutiveNoCount++;
+      if (consecutiveNoCount === 3) {
+        return data[i];
+      }
+    } else {
+      consecutiveNoCount = 0;
+    }
+  }
+  return;
+}
+
+function findQuestionsByCaegoryId(categoryId) {
+  return allQuestions.value.sort().filter((el) => el.id == categoryId);
+}
+
+function generateQuestions(age, selectedValue) {
+  let patientAge = age; // Should be accesable from entered patient data
+  questionsByCategoryWholeObject = findQuestionsByCaegoryId(categoryId);
+  const [question] = questionsByCategoryWholeObject;
+
+  categoriesQuestionNew = question?.questions.sort((a, b) => a.age - b.age); // Sorting all questions in by age
+
+  // Checking if there is questions on that category
+  if (answeredQuestions.length === 0) {
+    if (question?.questions.length === 0) {
+      categoryId = categoryId + 1;
+      templateCategoryName.value = question.category; //setting category name
+      templateQuestion.value = "No questions under this category"; //settign question in template
+      //  if is't Show message no questions under this category and show next button
+    } else {
+      // if there is questions ==>Continue
+      categoriesQuestionNew?.forEach((el, index) => {
+        if (el.age == patientAge) {
+          //filter question by age of patient
+          answeredQuestions.push({ ...el }); // Push first item in array that match age of patient
+          questionIndex = index;
+          templateQuestion.value = el.question;
+          templateCategoryName.value = question.category;
+        }
       });
-      questions.value = response.data;
-    });
-});
+    }
+  }
 
-const emit = defineEmits(["prev-page", "complete"]);
+  if (answeredQuestions.length > 0) {
+    if (selectedValue == "Yes") {
+      answeredQuestions.forEach((el, index) => {
+        if (index == answeredQuestions.length - 1) {
+          el.userAnswer = "Yes";
+        }
+      });
 
-const questions = ref([]);
+      if (questionIndex <= categoriesQuestionNew?.length) {
+        // Checking if that question is answered or not
+        let lastMatchIndex = -1;
 
-const currentPage = ref(1);
+        for (let i = 0; i < answeredQuestions.length; i++) {
+          const item = answeredQuestions[i];
+          const index = categoriesQuestionNew.findIndex(
+            (x) => x.id === item.id
+          );
+          if (index !== -1 && index > lastMatchIndex) {
+            lastMatchIndex = index;
+          }
+        }
 
-const pageCount = computed(() =>
-  Math.ceil(questions.value.length / itemsPerPage)
-);
+        if (
+          lastMatchIndex !== -1 &&
+          lastMatchIndex < categoriesQuestionNew.length - 1
+        ) {
+          if (
+            Object.keys({
+              ...Object(categoriesQuestionNew[lastMatchIndex + 1]),
+            }).length === 0
+          ) {
+            finalAnsweredArrayWithAnswers.push(answeredQuestions.at(-1));
+            categoryId = categoryId + 1;
+            answeredQuestions.length = 0;
+            questionsByCategoryWholeObject =
+              findQuestionsByCaegoryId(categoryId);
 
-const displayedQuestions = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return questions.value.slice(startIndex, endIndex);
-});
+            const [question] = questionsByCategoryWholeObject;
 
-function prevPage() {
-  emit("prev-page", { pageIndex: 1 });
+            categoriesQuestionNew = question?.questions.sort((a,b)=>a.age-b.age);
+
+            if (question?.questions.length === 0) {
+              categoryId = categoryId + 1;
+              templateCategoryName.value = question.category; //setting category name
+              templateQuestion.value = "No questions under this category"; //settign question in template
+              //  if is't Show message no questions under this category and show next button
+            } else {
+              // if there is questions ==>Continue
+              categoriesQuestionNew?.forEach((el, index) => {
+                if (el.age == patientAge) {
+                  answeredQuestions.push({ ...el }); // Push first item in array that match age of patient
+                  questionIndex = index;
+                }
+                templateQuestion.value = el.question;
+                templateCategoryName.value = question.category;
+              });
+            }
+          } else {
+            answeredQuestions.push({
+              ...Object(categoriesQuestionNew[lastMatchIndex + 1]),
+            });
+            questionIndex = lastMatchIndex + 1;
+            answeredQuestions.forEach((el,index)=>{
+              if (index == answeredQuestions.length - 1) {
+             templateQuestion.value = el.question;
+          }
+            })
+          }
+        } 
+        else {
+          if (
+            Object.keys({
+              ...Object(categoriesQuestionNew[lastMatchIndex + 1]),
+            }).length === 0
+          ) {
+            finalAnsweredArrayWithAnswers.push(answeredQuestions.at(-1));
+            categoryId = categoryId + 1;
+            answeredQuestions.length = 0;
+
+            if(categoryId==5){
+                isCompleted.value=true
+              }
+            questionsByCategoryWholeObject =findQuestionsByCaegoryId(categoryId);
+
+            const [question] = questionsByCategoryWholeObject;
+
+            categoriesQuestionNew = question?.questions.sort((a,b)=>a.age-b.age);
+
+            if (question?.questions.length === 0) {
+              categoryId = categoryId + 1;
+              templateCategoryName.value = question.category; //setting category name
+              templateQuestion.value = "No questions under this category"; //settign question in template
+              //  if is't Show message no questions under this category and show next button
+            } else {
+              // if there is questions ==>Continue
+              categoriesQuestionNew?.forEach((el, index) => {
+                if (el.age == patientAge) {
+                  answeredQuestions.push({ ...el }); // Push first item in array that match age of patient
+                  questionIndex = index;
+                  templateQuestion.value = el.question;
+                  templateCategoryName.value = question.category;
+                }
+              });
+            }
+          } else {
+            answeredQuestions.push({
+              ...Object(categoriesQuestionNew[questionIndex + 1]),
+            });
+            questionIndex = questionIndex + 1;
+            answeredQuestions.forEach((el,index)=>{
+              if (index == answeredQuestions.length - 1) {
+             templateQuestion.value = el.question;
+          }
+            })
+          }
+        }
+      }
+    }
+
+    if (selectedValue == "No") {
+      answeredQuestions.forEach((el, index) => {
+        if (index == answeredQuestions.length - 1) {
+          el.userAnswer = "No";
+          templateQuestion.value = el.question;
+        }
+      });
+      if (findFirstConsecutiveThreeNo(answeredQuestions) !== undefined) {
+        finalAnsweredArrayWithAnswers.push(
+          findFirstConsecutiveThreeNo(answeredQuestions)
+        );
+        categoryId = categoryId + 1;
+        answeredQuestions.length = 0;
+        if(categoryId==5){
+          isCompleted.value=true
+        }
+
+        questionsByCategoryWholeObject = findQuestionsByCaegoryId(categoryId);
+
+        const [question] = questionsByCategoryWholeObject;
+
+        categoriesQuestionNew = question?.questions.sort((a,b)=>a.age-b.age);
+
+        if (question?.questions.length === 0) {
+          categoryId = categoryId + 1;
+          templateCategoryName.value = question.category; //setting category name
+          templateQuestion.value = "No questions under this category"; //settign question in template
+          //  if is't Show message no questions under this category and show next button
+        } else {
+          // if there is questions ==>Continue
+          categoriesQuestionNew?.forEach((el, index) => {
+            if (el.age == patientAge) {
+              answeredQuestions.push({ ...el }); // Push first item in array that match age of patient
+              questionIndex = index;
+            }
+            templateQuestion.value = el.question;
+            templateCategoryName.value = question.category;
+          });
+        }
+      }
+
+      /**
+       * Checking for index vs availableQuestions
+       */
+      if (questionIndex <= categoriesQuestionNew?.length) {
+        let firstMatchIndex = categoriesQuestionNew.length - 1;
+
+        for (let i = 0; i < answeredQuestions.length; i++) {
+          const item = answeredQuestions[i];
+          const index = categoriesQuestionNew.findIndex(
+            (x) => x.id === item.id
+          );
+          if (index !== -1 && index < firstMatchIndex) {
+            firstMatchIndex = index;
+          }
+        }
+          
+        if (
+          firstMatchIndex !== categoriesQuestionNew.length - 1 &&
+          firstMatchIndex >= 0
+        ) {
+          
+          if( firstMatchIndex - 1==-1){
+            finalAnsweredArrayWithAnswers.push(answeredQuestions.slice(-3).find(el=>el.userAnswer=='No'));
+            categoryId = categoryId + 1;
+            answeredQuestions.length = 0;
+            questionsByCategoryWholeObject =
+              findQuestionsByCaegoryId(categoryId);
+
+              const [question] = questionsByCategoryWholeObject;
+
+            categoriesQuestionNew = question?.questions.sort((a,b)=>a.age-b.age);
+            answeredQuestions.length=0
+
+            if (question?.questions.length === 0) {
+              categoryId = categoryId + 1;
+              templateCategoryName.value = question.category; //setting category name
+              templateQuestion.value = "No questions under this category"; //settign question in template
+              //  if is't Show message no questions under this category and show next button
+            } else {
+              if(categoryId==5){
+                isCompleted.value=true
+              }else{
+                categoriesQuestionNew?.forEach((el, index) => {
+                  if (el.age == patientAge) {
+                    answeredQuestions.push({ ...el }); // Push first item in array that match age of patient
+                    questionIndex = index;
+                    templateQuestion.value = el.question;
+                    templateCategoryName.value = question.category;
+                  }
+                });
+              }
+            }
+          }else{
+            answeredQuestions.push({
+              ...Object(categoriesQuestionNew[firstMatchIndex - 1]),
+            });
+            questionIndex = firstMatchIndex - 1;
+            answeredQuestions.forEach((el, index) => {
+          if (index == answeredQuestions.length - 1) {
+            templateQuestion.value = el.question;
+          }
+        });
+          }
+        } else {
+          answeredQuestions.push({
+            ...Object(categoriesQuestionNew[questionIndex - 1]),
+          });
+          questionIndex = questionIndex - 1;
+          answeredQuestions.forEach((el, index) => {
+        if (index == answeredQuestions.length - 1) {
+          templateQuestion.value = el.question;
+        }
+      });
+        }
+      }
+    }
+  }
 }
+
+
+const emit = defineEmits(["complete"]);
 function complete() {
-  // console.log('question.id :>> ', questions.id);
-  emit("complete",{formData:{patientQuestion:questions.value}});
+  emit("complete", {
+    formData: { patientQuestion: [...finalAnsweredArrayWithAnswers] },
+  });
 }
+complete();
 </script>

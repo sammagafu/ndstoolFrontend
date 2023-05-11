@@ -114,7 +114,7 @@ import TriStateCheckbox from 'primevue/tristatecheckbox';
 import VirtualScroller from 'primevue/virtualscroller';
 
 
-axios.defaults.baseURL = 'http://localhost:8000/api/v1/'
+axios.defaults.baseURL = 'http://nsd.pediatrics.or.tz/api/v1/'
 
 const app = createApp(App)
 

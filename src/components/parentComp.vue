@@ -1,7 +1,7 @@
 <template>
   <TopNavigationBar></TopNavigationBar>
   <div>
-    <Toast />
+    <!-- <Toast /> -->
 
     <div class="card">
       <Steps :model="items" aria-label="Form Steps" />
@@ -26,12 +26,12 @@
 import TopNavigationBar from "./TopNavigationBar.vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
-import { useToast } from "primevue/usetoast";
-import Toast from "primevue/toast";
+// import { useToast } from "primevue/usetoast";
+// import Toast from "primevue/toast";
 import axios from "axios";
 
 const router = useRouter();
-const toast = useToast();
+// const toast = useToast();
 const items = [
   {
     label: "Patient Information",
@@ -55,7 +55,9 @@ const prevPage = (event) => {
   router.push(items[event.pageIndex - 1].to);
 };
 const complete = (dataQuestions) => {
-  console.log('dataQuestions :>> ', dataQuestions);
+  if (!dataQuestions) return
+  
+  console.log('Submitting dataQuestions :>> ', dataQuestions);
 let submittingObject={
   ...formObject,
   patientQuestion:dataQuestions.formData.patientQuestion.map(el=>({
@@ -63,18 +65,16 @@ let submittingObject={
     answers:el.userAnswer
   }))
 }
-
-console.log('submittingObject :>> ', submittingObject);
-
+/**
+ * Post submitted questions 
+ */
 axios.post('patient/',submittingObject,).then(response =>{ }).catch(error =>{
 })
-
-
-  toast.add({
-    severity: "success",
-    summary: "Order submitted",
-    detail: "Dear, " + formObject.fullname + " your order completed.",
-  });
+  // toast.add({
+  //   severity: "success",
+  //   summary: "Order submitted",
+  //   detail: "Dear, " + formObject.fullname + " your order completed.",
+  // });
 };
 </script>
 

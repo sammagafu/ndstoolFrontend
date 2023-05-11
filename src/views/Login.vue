@@ -70,7 +70,7 @@ const loginUser  =  function(){
 
 
     }).finally(error =>{
-        console.log('error :>> ', error);
+        // console.log('error :>> ', error);
     })
 
     axios.get('auth/users/me',{
@@ -79,15 +79,15 @@ const loginUser  =  function(){
         }
     })
     .then(response => {
-        console.log(response);
+        // console.log(response);
         router.push({name:'home'})
     }).finally(error =>{
-        console.log('error :>> ', error);
+        // console.log('error :>> ', error);
     })
 }
 
 onMounted(() => {
-    console.log('object :>> ');
+    // console.log('object :>> ');
 })
 
 </script>

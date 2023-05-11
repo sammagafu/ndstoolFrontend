@@ -63,7 +63,7 @@ const displayedQuestions = computed(() => {
 
 <template>
   <div>
-      <Toast />
+      <!-- <Toast /> -->
 
       <div class="card">
           <Steps :model="items" aria-label="Form Steps" />
@@ -81,12 +81,12 @@ const displayedQuestions = computed(() => {
 
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useToast } from "primevue/usetoast";
-import Toast from 'primevue/toast';
+// import { useToast } from "primevue/usetoast";
+// import Toast from 'primevue/toast';
 
 
 const router = useRouter();
-const toast = useToast();
+// const toast = useToast();
 const items = ref([
   {
       label: 'Personal',
@@ -112,11 +112,11 @@ const prevPage = ({ pageIndex }) => {
     };
 
     const complete = () => {
-      toast.add({
-        severity: 'success',
-        summary: 'Order submitted',
-        detail: `Dear, ${formObject.firstname} ${formObject.lastname} your order completed.`
-      });
+      // toast.add({
+      //   severity: 'success',
+      //   summary: 'Order submitted',
+      //   detail: `Dear, ${formObject.firstname} ${formObject.lastname} your order completed.`
+      // });
     };
 
 </script>
