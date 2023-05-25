@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 
 export const userStore = defineStore('counter', () => {
   const count = ref(0)
+  const detectedAge = ref(0)
   const isAuthenticated = ref(false)
   const authToken = ref('')
   // Load data from local storage on component mount
@@ -14,5 +15,5 @@ export const userStore = defineStore('counter', () => {
     count.value++
   }
 
-  return { count, doubleCount, increment,isAuthenticated,authToken }
+  return { count, doubleCount, increment,isAuthenticated,authToken,detectedAge }
 })
