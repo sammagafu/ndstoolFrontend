@@ -7,13 +7,8 @@
       <Steps :model="items" aria-label="Form Steps" />
     </div>
 
-    <router-view
-      v-slot="{ Component }"
-      :formData="formObject"
-      @prevPage="prevPage($event)"
-      @nextPage="nextPage($event)"
-      @complete="complete"
-    >
+    <router-view v-slot="{ Component }" :formData="formObject" @prevPage="prevPage($event)" @nextPage="nextPage($event)"
+      @complete="complete">
       <keep-alive>
         <component :is="Component" />
       </keep-alive>
@@ -43,6 +38,7 @@ const items = [
   },
 ];
 const formObject = reactive({});
+// console.log("formObject", formObject);
 
 const nextPage = (event) => {
   for (let field in event.formData) {
@@ -56,20 +52,33 @@ const prevPage = (event) => {
 };
 const complete = (dataQuestions) => {
   if (!dataQuestions) return
-  
-  console.log('Submitting dataQuestions :>> ', dataQuestions);
-let submittingObject={
+
+  let submittingObject = {
   ...formObject,
-  patientQuestion:dataQuestions.formData.patientQuestion.map(el=>({
-    question:el.id,
-    answers:el.userAnswer
-  }))
-}
-/**
- * Post submitted questions 
- */
-axios.post('patient/',submittingObject,).then(response =>{ }).catch(error =>{
-})
+  patientQuestion: dataQuestions.formData.questions.flatMap((el) =>
+    el.questions
+    .filter((quest) => quest.userAnswer !== "")
+    .map((quest) => ({
+      question: quest.id,
+      answers: quest.userAnswer,
+    }))
+  ),
+  comments: dataQuestions.formData.questions
+  .map((co) => ({
+    category: co.category,
+    comment: co.comment,
+  })),
+};
+  console.log("submittingObject", submittingObject);
+  /**
+   * Post submitted questions 
+   */
+  axios.post('patient/', submittingObject,).then(response => {
+    console.log('successfull', response);
+   }).catch(error => {
+    console.log('error', error
+    );
+  })
   // toast.add({
   //   severity: "success",
   //   summary: "Order submitted",
