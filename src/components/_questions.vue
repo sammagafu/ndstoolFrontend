@@ -34,11 +34,11 @@
         </div>
 
         <div class="flex justify-between my-8 m-4">
-          <button class="mx-2" @click="decrement()" :disabled="currentPage === 1">
+          <button class="mx-2 rounded-full bg-red-600 px-4 py-2 text-white" @click="decrement()" :disabled="currentPage === 1">
             Previous
           </button>
           {{ currentPage }}/{{ questions.length }}
-          <button class="mx-2" @click="incrementPage()" :disabled="currentPage === questions.length">
+          <button class="mx-2 rounded-full bg-blue-600 px-4 py-2 text-white" @click="incrementPage()" :disabled="currentPage === questions.length">
             Next 
           </button>
         </div>
@@ -47,7 +47,7 @@
     <template v-slot:footer>
       <div class="flex justify-center gap-8">
         <!-- <Button label="Back" @click="prevPage()" icon="pi pi-angle-left" class="p-button-info" /> -->
-        <Button label="Submit" @click="complete()" class="p-button-success" />
+        <Button label="Submit" @click="complete()" class="p-button-success block" />
       </div>
     </template>
   </Card>

@@ -74,7 +74,7 @@ const complete = (dataQuestions) => {
    * Post submitted questions 
    */
   axios.post('patient/', submittingObject,).then(response => {
-    console.log('successfull', response);
+    console.log('submittingObject', submittingObject);
    }).catch(error => {
     console.log('error', error
     );
