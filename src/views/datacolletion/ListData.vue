@@ -21,10 +21,14 @@ import TopNavigationBar from "../../components/TopNavigationBar.vue";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import axios from "axios";
+import { useRouter, useRoute } from 'vue-router'
 import { userStore } from '@/stores/counter'
 
 const userstore = userStore()
 const tableData = ref([])
+const router = useRouter()
+const route = useRoute()
+
 
 onMounted(() => {
   axios
@@ -44,7 +48,13 @@ onMounted(() => {
             }
         })
     // console.log('response :>> ', response);
-    });
+    }).catch((error=>{
+        // console.log(error.response.status)
+        if (error.response.status === 401) {
+            // route.push({name:'login'})
+            userstore.isAuthenticated == false  
+        }
+    }));
 });
 
 </script>

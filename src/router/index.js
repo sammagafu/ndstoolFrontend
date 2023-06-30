@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { userStore } from "@/stores/counter"
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -55,7 +57,10 @@ const router = createRouter({
               ]
             },
             
-          ]
+          ],
+          meta: {
+            requiresAuth: true
+          }
         },
         {
           path:'',
@@ -77,4 +82,20 @@ const router = createRouter({
   ]
 })
 
+router.beforeEach((to,from,next)=> {
+  const store = userStore()
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  // console.log('store :>> ', store);
+  if(requiresAuth && !store.authToken){
+    console.log('store.authToken :>> ', store.authToken);
+    next('/account/login');
+  }
+  else{
+    next();
+  }
+});
+
+
 export default router
+
+
