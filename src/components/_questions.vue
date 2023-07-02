@@ -97,25 +97,29 @@ function prevPage() {
   emit("prev-page", { pageIndex: 1 });
 }
 function complete() {
-  const isValid = validateForm();
-  if (isValid) {
-    emit("complete", { formData: { questions: questions.value } });
-  }
+  // console.log('cliecked :>> ');
+  // const isValid = validateForm();
+  // if (isValid) {
+  //   emit("complete", { formData: { questions: questions.value } });
+  // }
+  emit("complete", { formData: { questions: questions.value } });
 }
 function validateForm() {
   let isValid = true;
 
   questions.value.forEach((question) => {
-    const comment = question.comment.trim();
+    // comments can be empty
+    // const comment = question.comment.trim();
     const answers = question.questions.filter((quest) => quest.userAnswer !== "");
 
-    if (comment === "" && answers.length < 3) {
+    if (answers.length < 3) {
       isValid = false;
-    } else if (comment !== "" && answers.length < 3) {
-      isValid = false;
-    } else if (comment === "" && answers.length >= 3) {
-      isValid = false;
-    }
+    } 
+    // else if (comment !== "" && answers.length < 3) {
+    //   isValid = false;
+    // } else if (comment === "" && answers.length >= 3) {
+    //   isValid = false;
+    // }
   });
 
   return isValid;

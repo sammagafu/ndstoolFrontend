@@ -112,11 +112,11 @@ const prevPage = ({ pageIndex }) => {
     };
 
     const complete = () => {
-      // toast.add({
-      //   severity: 'success',
-      //   summary: 'Order submitted',
-      //   detail: `Dear, ${formObject.firstname} ${formObject.lastname} your order completed.`
-      // });
+      toast.add({
+        severity: 'success',
+        summary: 'Order submitted',
+        detail: `Dear, ${formObject.firstname} ${formObject.lastname} your order completed.`
+      });
     };
 
 </script>

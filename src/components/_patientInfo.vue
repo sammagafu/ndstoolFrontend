@@ -226,6 +226,28 @@
 
               <div>
                 <label
+                  for="agegroup"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Growth Age Group</label
+                >
+                <input
+                  type="text"
+                  name="text"
+                  id="agegroup"
+                  :class="{
+                    'p-invalid': validationErrors.phone && submitted,
+                  }"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Age group in months"
+                  v-model="ageGroup"
+                />
+                <small v-show="validationErrors.phone && submitted" class="p-error"
+                  >phone is required.</small
+                >
+              </div>
+
+              <div>
+                <label
                   for="address"
                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >Your address</label
@@ -279,6 +301,7 @@ const phone = ref("");
 const address = ref("");
 const sex = ref("");
 const ageGroup = ref("");
+const age = ref("");
 const premature = ref("");
 
 const submitted = ref(false);
@@ -291,7 +314,6 @@ const pickedDate = () => {
   const monthsDiff = timeDiff / (1000 * 60 * 60 * 24 * 30);
   ageGroup.value = Math.floor(monthsDiff);
   store.detectedAge = ageGroup
-  console.log("store.detectedAge :>> ", store.detectedAge);
 };
 
 function nextPage() {
