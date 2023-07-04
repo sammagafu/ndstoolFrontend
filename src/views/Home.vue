@@ -1,109 +1,101 @@
 <script setup>
-    import TopNavigationBar from '../components/TopNavigationBar.vue';
-    import Chart from 'primevue/chart';
-    import { ref, onMounted } from "vue";
-    import axios from 'axios';
-    import { userStore } from '@/stores/counter'
-
-
-const chartData = ref(null);
-const chartOptions = ref(null);
-const userstore = userStore()
-    // chartOptions.value = setChartOptions();
-
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import Chart from 'primevue/chart';
+import TopNavigationBar from '@/components/TopNavigationBar.vue'
 
 onMounted(() => {
-    // chartData.value = setChartData();
-    chartOptions.value = setChartOptions();
-    // get patient data
-    axios
-    .get("patient",{
-        headers:{
-            'Authorization' : "Token " + userstore.authToken   
-        }
-    })
-    .then((response) => {
-        chartData.value = response.data.map(row=>{
-            return {
-                    
-                region:row.region,
-                weight:row.weight,
-                height:row.height,
-                phonenumber:row.phonenumber
-            }
-        })
-
-
-        chartData.value = response.data;
-        chartData.value.labels = response.data.region;
-        chartData.value.datasets[0].data = response.data.data;
-    }).catch((error=>{
-        console.log(error)
-    }));
+  fetchData();
 });
 
+const chartData = ref();
+const chartOptions = ref();
+const dataDashboard = ref()
 
-const setChartData = () => {
-    const documentStyle = getComputedStyle(document.documentElement);
 
-    return {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-            {
-                label: 'First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                borderColor: documentStyle.getPropertyValue('--blue-500'),
-                tension: 0.4
-            },
-            {
-                label: 'Second Dataset',
-                data: [28, 48, 40, 19, 86, 27, 90],
-                fill: false,
-                borderColor: documentStyle.getPropertyValue('--pink-500'),
-                tension: 0.4
-            }
-        ]
-    };
+const fetchData = async () => {
+  try {
+    const response = await axios.get("patient");
+    const data = response.data;
+    dataDashboard.value = response.data;
+
+    chartData.value = setChartData(data);
+    chartOptions.value = setChartOptions();
+    // console.log('data :>> ', data);
+  } catch (error) {
+    console.error(error);
+  }
 };
+
+const setChartData = (data) => {
+  const documentStyle = getComputedStyle(document.documentElement);
+
+  const groupedData = data.reduce((result, item) => {
+    const region = item.region;
+    if (!result[region]) {
+      result[region] = 0;
+    }
+    result[region]++;
+    return result;
+  }, {
+
+  });
+
+  const labels = Object.keys(groupedData);
+  const datasets = [
+    {
+      label: "Total Count",
+      data: Object.values(groupedData),
+      fill: false,
+      borderColor: documentStyle.getPropertyValue("--blue-500"),
+      tension: 0.4,
+    },
+  ];
+
+  return {
+    labels,
+    datasets,
+  };
+};
+
 const setChartOptions = () => {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+  const documentStyle = getComputedStyle(document.documentElement);
+  const textColor = documentStyle.getPropertyValue("--text-color");
+  const textColorSecondary = documentStyle.getPropertyValue("--text-color-secondary");
+  const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
 
-    return {
-        maintainAspectRatio: false,
-        aspectRatio: 0.6,
-        plugins: {
-            legend: {
-                labels: {
-                    color: textColor
-                }
-            }
+  return {
+    maintainAspectRatio: false,
+    aspectRatio: 0.6,
+    plugins: {
+      legend: {
+        labels: {
+          color: textColor,
         },
-        scales: {
-            x: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder
-                }
-            },
-            y: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder
-                }
-            }
-        }
-    };
-}
-
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: textColorSecondary,
+        },
+        grid: {
+          color: surfaceBorder,
+        },
+      },
+      y: {
+        ticks: {
+          color: textColorSecondary,
+        },
+        grid: {
+          color: surfaceBorder,
+        },
+      },
+    },
+  };
+};
 </script>
+
 <template>
     <TopNavigationBar></TopNavigationBar>
     <div class="container mx-auto py-4">
@@ -111,7 +103,7 @@ const setChartOptions = () => {
             <div class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-blue-500 to-blue-900 p-3.5">
                 <p class="text-xs uppercase text-blue-100">Total Registered</p>
                 <div class="flex items-end justify-between space-x-2">
-                  <p class="mt-4 text-2xl font-medium text-white">56</p>
+                  <p class="mt-4 text-2xl font-medium text-white">{{  }}</p>
                   <!-- <a href="#" class="border-b border-dotted border-current pb-0.5 text-xs font-medium text-pink-100 outline-none transition-colors duration-300 line-clamp-1 hover:text-white focus:text-white">Get Report
                   </a> -->
                 </div>

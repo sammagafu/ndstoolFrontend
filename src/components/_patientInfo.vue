@@ -239,10 +239,10 @@
                   }"
                   class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Age group in months"
-                  v-model="ageGroup"
+                  v-model="age"
                 />
-                <small v-show="validationErrors.phone && submitted" class="p-error"
-                  >phone is required.</small
+                <small v-show="validationErrors.age && submitted" class="p-error"
+                  >Growth Age Group is required.</small
                 >
               </div>
 
@@ -352,6 +352,9 @@ function validateForm() {
 
   if (!height.value) validationErrors.value["height"] = true;
   else delete validationErrors.value["height"];
+
+  if (!age.value) validationErrors.value["age"] = true;
+  else delete validationErrors.value["age"];
 
   if (!weight.value) validationErrors.value["weight"] = true;
   else delete validationErrors.value["weight"];

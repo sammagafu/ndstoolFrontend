@@ -21,11 +21,13 @@
 import TopNavigationBar from "./TopNavigationBar.vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
+import { userStore } from '@/stores/counter'
 // import { useToast } from "primevue/usetoast";
 // import Toast from "primevue/toast";
 import axios from "axios";
 
 const router = useRouter();
+const userstore = userStore()
 // const toast = useToast();
 const items = [
   {
@@ -63,18 +65,24 @@ const complete = (dataQuestions) => {
       answers: quest.userAnswer,
     }))
   ),
-  comments: dataQuestions.formData.questions
-  .map((co) => ({
-    category: co.category,
-    comment: co.comment,
-  })),
+  patientComment: dataQuestions.formData.questions
+  .flatMap((co) => {
+        if (co.comment !== "") {
+          return {
+            commentCategory: co.id,
+            comment: co.comment,
+          };
+        }
+        return [];
+      }),
 };
   console.log("submittingObject", submittingObject);
-  /**
-   * Post submitted questions 
-   */
-  axios.post('patient/', submittingObject,).then(response => {
-    console.log('submittingObject', submittingObject);
+  axios.post('patient/', submittingObject,{
+        headers:{
+            'Authorization' : "Token " + userstore.authToken   
+        }
+    }).then(response => {
+    router.push({name:'patient'})
    }).catch(error => {
     console.log('error', error
     );
