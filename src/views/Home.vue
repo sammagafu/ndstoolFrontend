@@ -2,13 +2,46 @@
     import TopNavigationBar from '../components/TopNavigationBar.vue';
     import Chart from 'primevue/chart';
     import { ref, onMounted } from "vue";
+    import axios from 'axios';
+    import { userStore } from '@/stores/counter'
+
+
+const chartData = ref(null);
+const chartOptions = ref(null);
+const userstore = userStore()
+    // chartOptions.value = setChartOptions();
+
 
 onMounted(() => {
-    chartData.value = setChartData();
+    // chartData.value = setChartData();
     chartOptions.value = setChartOptions();
+    // get patient data
+    axios
+    .get("patient",{
+        headers:{
+            'Authorization' : "Token " + userstore.authToken   
+        }
+    })
+    .then((response) => {
+        chartData.value = response.data.map(row=>{
+            return {
+                    
+                region:row.region,
+                weight:row.weight,
+                height:row.height,
+                phonenumber:row.phonenumber
+            }
+        })
+
+
+        chartData.value = response.data;
+        chartData.value.labels = response.data.region;
+        chartData.value.datasets[0].data = response.data.data;
+    }).catch((error=>{
+        console.log(error)
+    }));
 });
-const chartData = ref();
-const chartOptions = ref();
+
 
 const setChartData = () => {
     const documentStyle = getComputedStyle(document.documentElement);
@@ -78,7 +111,7 @@ const setChartOptions = () => {
             <div class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-blue-500 to-blue-900 p-3.5">
                 <p class="text-xs uppercase text-blue-100">Total Registered</p>
                 <div class="flex items-end justify-between space-x-2">
-                  <p class="mt-4 text-2xl font-medium text-white">$12,556</p>
+                  <p class="mt-4 text-2xl font-medium text-white">56</p>
                   <!-- <a href="#" class="border-b border-dotted border-current pb-0.5 text-xs font-medium text-pink-100 outline-none transition-colors duration-300 line-clamp-1 hover:text-white focus:text-white">Get Report
                   </a> -->
                 </div>
@@ -90,7 +123,7 @@ const setChartOptions = () => {
               <div class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-red-600 to-red-900 p-3">
                 <p class="text-xs uppercase text-amber-50">Undergoing Delay</p>
                 <div class="flex items-end justify-between space-x-2">
-                  <p class="mt-4 text-2xl font-medium text-white">$61,556</p>
+                  <p class="mt-4 text-2xl font-medium text-white">61</p>
                 </div>
                 <div class="mask absolute top-10 right-10 -m-3 h-16 w-16">
                 <img src="../assets/img/mother.svg" alt="">
@@ -100,7 +133,7 @@ const setChartOptions = () => {
               <div class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-blue-500 to-blue-900 p-3.5">
                 <p class="text-xs uppercase text-blue-100">Premature Babies</p>
                 <div class="flex items-end justify-between space-x-2">
-                  <p class="mt-4 text-2xl font-medium text-white">$12,556</p>
+                  <p class="mt-4 text-2xl font-medium text-white">12</p>
                   <!-- <a href="#" class="border-b border-dotted border-current pb-0.5 text-xs font-medium text-pink-100 outline-none transition-colors duration-300 line-clamp-1 hover:text-white focus:text-white">Get Report
                   </a> -->
                 </div>
