@@ -1,5 +1,5 @@
 <template>
-  <Card>
+  <div class="m-8"><Card>
     <template v-slot:content>
       <div>
         <!-- <TopNavigationBar/> -->
@@ -28,7 +28,7 @@
           </div>
           <div class="m-4" v-if="question.id === currentPage">
             <label for="">
-              <Textarea v-model="question.comment" rows="" :placeholder="'Comment for '+question.category " class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+              <Textarea v-model="question.comment" cols="30" rows="4" :placeholder="'Comment for '+question.category " class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
             </label>
           </div>
         </div>
@@ -47,10 +47,10 @@
     <template v-slot:footer>
       <div class="flex justify-center gap-8">
         <!-- <Button label="Back" @click="prevPage()" icon="pi pi-angle-left" class="p-button-info" /> -->
-        <Button label="Submit" @click="complete()" class="p-button-success block" />
+        <Button label="Submit" @click="complete();" class="p-button-success block" />
       </div>
     </template>
-  </Card>
+  </Card></div>
 </template>
 
 <script setup>
@@ -72,7 +72,9 @@ onMounted(() => {
       })
       el.comment = "";
     });
+    
     questions.value = response.data;
+    console.log('questions.length :>> ', questions.value.length);
     // console.log("vvv", questions.value);
   });
 });

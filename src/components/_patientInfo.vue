@@ -241,6 +241,23 @@
 
               <div>
                 <label
+                  for="address"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Patient address</label
+                >
+                <textarea
+                  id="address"
+                  rows="4"
+                  class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Address goes here..."
+                  v-model="address"
+                ></textarea>
+                <small v-show="validationErrors.address && submitted" class="p-error"
+                  >address is required.</small
+                >
+              </div>
+              <div>
+                <label
                   for="agegroup"
                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >Growth Age Group</label
@@ -260,24 +277,12 @@
                   >Growth Age Group is required.</small
                 >
               </div>
-
-              <div>
-                <label
-                  for="address"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Your address</label
-                >
-                <textarea
-                  id="address"
-                  rows="4"
-                  class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Address goes here..."
-                  v-model="address"
-                ></textarea>
-                <small v-show="validationErrors.address && submitted" class="p-error"
-                  >address is required.</small
-                >
-              </div>
+          <div>
+            <label for="comment"  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              General Conclusion
+            </label>
+            <textarea placeholder="General comment" id="" cols="30" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" v-model="drcomment" ></textarea>
+          </div>
             </form>
           </div>
         </div>
@@ -319,6 +324,7 @@ const ageGroup = ref("");
 const age = ref("");
 const premature = ref("");
 const weeksborn = ref("");
+const drcomment = ref()
 
 const submitted = ref(false);
 const validationErrors = ref({});
@@ -348,6 +354,7 @@ function nextPage() {
         sex: sex.value,
         weeksborn:weeksborn.value,
         premature:premature.value,
+        overallcomment:drcomment
       },
       pageIndex: 0,
       ageroup: ageGroup,

@@ -38,10 +38,10 @@ const items = [
     label: "Questions",
     to: "/data/create/base/question",
   },
-  {
-    label: "Comments",
-    to: "/data/create/base/comment",
-  },
+  // {
+  //   label: "Comments",
+  //   to: "/data/create/base/comment",
+  // },
 ];
 const formObject = reactive({});
 // console.log("formObject", formObject);
