@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { userStore } from "@/stores/counter"
+import NotFound from '@/views/NotFound.vue';
+
 
 
 const router = createRouter({
@@ -83,7 +85,11 @@ const router = createRouter({
           component: () => import('../views/datacolletion/ViewData.vue')
         },
       ]
-    }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      component: NotFound,
+    },
   ]
 })
 
