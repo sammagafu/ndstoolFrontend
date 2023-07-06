@@ -86,7 +86,7 @@ const complete = (dataQuestions) => {
             'Authorization' : "Token " + userstore.authToken   
         }
     }).then(response => {
-    router.push({name:'patient'})
+    router.push({ path: '/data/create/base/patient' })
    }).catch(error => {
     console.log('error', error
     );
