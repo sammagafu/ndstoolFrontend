@@ -53,6 +53,11 @@ const router = createRouter({
                   path: 'question',
                   name: 'question',
                   component: () => import("../components/_questions.vue")
+                },
+                {
+                  path: 'comment',
+                  name: 'comment',
+                  component: () => import("../components/_overallcomment.vue")
                 }
               ]
             },

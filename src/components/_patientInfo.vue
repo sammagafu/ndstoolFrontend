@@ -81,13 +81,28 @@
                   class="block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   v-model="premature"
                 >
-                  <option disabled value>Choose Patient Gender</option>
+                  <option disabled value>Choose Child is Premature</option>
                   <option value="Yes">Yes</option>
                   <option value="No">No</option>
                 </select>
                 <small v-show="validationErrors.sex && submitted" class="p-error"
                   >sex is required.</small
                 >
+              </div>
+              <div v-if="premature == 'Yes'">
+                <label
+                  for="prematureweeks"
+                  class="block mb-2 text-base font-medium text-gray-900 dark:text-white"
+                  >How Many weeks was the baby born</label
+                >
+                <input
+                  type="number"
+                  name="text"
+                  id="prematureweeks"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Number of weeks the baby was born"
+                  v-model="weeksborn"
+                />
               </div>
 
               <div>
@@ -303,6 +318,7 @@ const sex = ref("");
 const ageGroup = ref("");
 const age = ref("");
 const premature = ref("");
+const weeksborn = ref("");
 
 const submitted = ref(false);
 const validationErrors = ref({});
@@ -330,6 +346,8 @@ function nextPage() {
         phone: phone.value,
         address: address.value,
         sex: sex.value,
+        weeksborn:weeksborn.value,
+        premature:premature.value,
       },
       pageIndex: 0,
       ageroup: ageGroup,
