@@ -300,7 +300,6 @@ const phone = ref("");
 const address = ref("");
 const sex = ref("");
 const ageGroup = ref("");
-const age = ref("");
 const premature = ref("");
 const weeksborn = ref("");
 const drcomment = ref()
@@ -356,10 +355,7 @@ function validateForm() {
 
   if (!height.value) validationErrors.value["height"] = true;
   else delete validationErrors.value["height"];
-
-  if (!age.value) validationErrors.value["age"] = true;
-  else delete validationErrors.value["age"];
-
+  
   if (!weight.value) validationErrors.value["weight"] = true;
   else delete validationErrors.value["weight"];
 

@@ -23,6 +23,7 @@ import Column from 'primevue/column';
 import axios from "axios";
 import { useRouter, useRoute } from 'vue-router'
 import { userStore } from '@/stores/counter'
+import apiService from '@/services/apiService';
 
 const userstore = userStore()
 const tableData = ref([])
@@ -31,12 +32,8 @@ const route = useRoute()
 
 
 onMounted(() => {
-  axios
-    .get("patient",{
-        headers:{
-            'Authorization' : "Token " + userstore.authToken   
-        }
-    })
+    apiService
+    .get("patient")
     .then((response) => {
         tableData.value = response.data.map(row=>{
             return {
