@@ -91,11 +91,11 @@ const complete = (dataQuestions) => {
     console.log('error', error
     );
   })
-  // toast.add({
-  //   severity: "success",
-  //   summary: "Order submitted",
-  //   detail: "Dear, " + formObject.fullname + " your order completed.",
-  // });
+  toast.add({
+    severity: "success",
+    summary: "Patient Added",
+    detail: "Patient Added Successful",
+  });
 };
 </script>
 
