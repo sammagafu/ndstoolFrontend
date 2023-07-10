@@ -14,7 +14,7 @@
                 <label
                   for="fullname"
                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Patient Initals</label
+                  >Patient Full Name</label
                 >
                 <input
                   type="text"
@@ -35,7 +35,7 @@
                 <label
                   for="facility"
                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >facility Name</label
+                  >Facility Name</label
                 >
                 <input
                   type="text"
@@ -54,6 +54,27 @@
               </div>
               <div>
                 <label
+                  for="dateofbirth"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Date of Birth</label
+                >
+                <input
+                  type="date"
+                  id="dateofbirth"
+                  name="trip-start"
+                  :class="{
+                    'p-invalid': validationErrors.dateofbirth && submitted,
+                  }"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  v-model="dateofbirth"
+                  @input="pickedDate"
+                />
+                <small v-show="validationErrors.dateofbirth && submitted" class="p-error"
+                  >dateofbirth is required.</small
+                >
+              </div>
+              <div>
+                <label
                   for="sex"
                   class="block mb-2 text-base font-medium text-gray-900 dark:text-white"
                   >Sex</label
@@ -62,7 +83,7 @@
                   class="block w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   v-model="sex"
                 >
-                  <option disabled value>Choose Patient Gender</option>
+                  <option disabled value>Choose One</option>
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
                 </select>
@@ -149,28 +170,6 @@
                   <option value="Unguja North">Unguja North</option>
                   <option value="Unguja South">Unguja South</option>
                 </select>
-              </div>
-
-              <div>
-                <label
-                  for="dateofbirth"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Date of Birth</label
-                >
-                <input
-                  type="date"
-                  id="dateofbirth"
-                  name="trip-start"
-                  :class="{
-                    'p-invalid': validationErrors.dateofbirth && submitted,
-                  }"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  v-model="dateofbirth"
-                  @input="pickedDate"
-                />
-                <small v-show="validationErrors.dateofbirth && submitted" class="p-error"
-                  >dateofbirth is required.</small
-                >
               </div>
 
               <div>
