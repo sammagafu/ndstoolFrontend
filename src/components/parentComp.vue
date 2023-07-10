@@ -22,9 +22,9 @@ import TopNavigationBar from "./TopNavigationBar.vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import { userStore } from '@/stores/counter'
-// import { useToast } from "primevue/usetoast";
 // import Toast from "primevue/toast";
-import axios from "axios";
+// import axios from "axios";
+import apiService from '@/services/apiService';
 
 const router = useRouter();
 const userstore = userStore()
@@ -81,21 +81,26 @@ const complete = (dataQuestions) => {
       }),
 };
   console.log("submittingObject", submittingObject);
-  axios.post('patient/', submittingObject,{
-        headers:{
-            'Authorization' : "Token " + userstore.authToken   
-        }
+  apiService.post('patient/', submittingObject,{
+        // headers:{
+        //     'Authorization' : "Token " + userstore.authToken   
+        // }
     }).then(response => {
-    router.push({ name: 'home' })
+      const status = 
+        JSON.parse(response.data.response.status);
+
+      //redirect logic
+      if (status == '200') {
+        router.push({ name: 'home' })
+      }
+      if (status == '401') {
+        router.push({ name: 'home' })
+      }
+    
    }).catch(error => {
     console.log('error', error
     );
   })
-  toast.add({
-    severity: "success",
-    summary: "Patient Added",
-    detail: "Patient Added Successful",
-  });
 };
 </script>
 
