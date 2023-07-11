@@ -20,7 +20,11 @@
 
 import TopNavigationBar from "./TopNavigationBar.vue";
 import { reactive } from "vue";
-import router from '@/router'; // Assuming you have Vue Router set up
+import { useRouter, useRoute } from "vue-router";
+
+const router = useRouter()
+
+
 import { userStore } from '@/stores/counter'
 // import Toast from "primevue/toast";
 // import axios from "axios";
