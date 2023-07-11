@@ -20,15 +20,12 @@
 
 import TopNavigationBar from "./TopNavigationBar.vue";
 import { reactive } from "vue";
-import { useRouter } from "vue-router";
+import router from '@/router'; // Assuming you have Vue Router set up
 import { userStore } from '@/stores/counter'
 // import Toast from "primevue/toast";
 // import axios from "axios";
 import apiService from '@/services/apiService';
 
-const router = useRouter();
-const userstore = userStore()
-// const toast = useToast();
 const items = [
   {
     label: "Patient Information",
@@ -78,21 +75,12 @@ const complete = (dataQuestions) => {
   console.log("submittingObject", submittingObject);
   apiService.post('patient/', submittingObject,{
     }).then(response => {
-      const status = 
-        JSON.parse(response.data.response.status);
-
-      //redirect logic
-      if (status == '200') {
-        router.push({ name: 'home' })
-      }
-      if (status == '401') {
-        router.push({ name: 'home' })
-      }
     
    }).catch(error => {
     console.log('error', error
     );
   })
+  router.push('home');
 };
 </script>
 
