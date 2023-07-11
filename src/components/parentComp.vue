@@ -77,9 +77,6 @@ const complete = (dataQuestions) => {
 };
   console.log("submittingObject", submittingObject);
   apiService.post('patient/', submittingObject,{
-        // headers:{
-        //     'Authorization' : "Token " + userstore.authToken   
-        // }
     }).then(response => {
       const status = 
         JSON.parse(response.data.response.status);
