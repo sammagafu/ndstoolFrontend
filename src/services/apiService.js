@@ -7,11 +7,13 @@ const apiClient = axios.create({
   baseURL: 'https://nsd.pediatrics.or.tz/api/v1/', // Update with your Django API URL
   timeout: 5000, // Timeout duration in milliseconds
 });
-
+        // headers:{
+        //     'Authorization' : "Token " + userstore.authToken   
+        // }
 // Add an interceptor to include the token in the header
 apiClient.interceptors.request.use(
   config => {
-    const authToken = localStorage.getItem('authToken'); // Retrieve the token from local storage
+    const authToken = localStorage.getItem('token'); // Retrieve the token from local storage
     if (authToken) {
       config.headers.Authorization = `Token ${authToken}`;
     }

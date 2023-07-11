@@ -282,11 +282,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref,onMounted } from "vue";
 import { userStore } from '../stores/counter'
+import apiService from "../services/apiService";
 
 const emit = defineEmits(["next-page"]);
 const store = userStore()
+
+onMounted(() => {
+  checkLoging();
+});
 
 // variables
 const fullname = ref("");
@@ -305,6 +310,21 @@ const drcomment = ref()
 
 const submitted = ref(false);
 const validationErrors = ref({});
+
+const checkLoging = async () => {
+  try {
+    const response = await apiService.get("auth/users/me/");
+    console.log('response :>> ', response);
+    // const status = 
+    //     JSON.parse(response.data.response.status);
+
+    //   if (status == '401') {
+    //     router.push({ name: 'login' })
+    //   }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const pickedDate = () => {
   const currentDate = new Date();

@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 // import axios from "axios";
 import Chart from 'primevue/chart';
 import TopNavigationBar from '@/components/TopNavigationBar.vue'
-import apiService from '@/services/apiService';
+import axios from "axios";
 
 
 onMounted(() => {
@@ -17,7 +17,7 @@ const dataDashboard = ref()
 
 const fetchData = async () => {
   try {
-    const response = await apiService.get("patient");
+    const response = await axios.get("patient");
     const data = response.data;
     dataDashboard.value = response.data;
 
