@@ -84,7 +84,7 @@ const complete = (dataQuestions) => {
     console.log('error', error
     );
   })
-  router.push('home');
+  router.push({name:'home'});
 };
 </script>
 
